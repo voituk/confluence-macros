@@ -1,0 +1,43 @@
+## Confluence Users List Macro
+##
+##   Produces a pile of user profile pictures for members of a specific group
+##
+## 
+## Macro has a body: N
+##
+##
+## @param Group:title=Group Name|type=string|required=true|desc=The group name
+## @param Title:title=List Title|type=string|required=false|desc=List title. Leave empty to use group name.
+## @param AvatarSize:title=Picture Size|type=enum|enumValues=32px,48px|required=true
+
+ 
+   
+#set($containerManagerClass = $action.class.forName('com.atlassian.spring.container.ContainerManager'))
+#set($getInstanceMethod = $containerManagerClass.getDeclaredMethod('getInstance',null))
+#set($containerManager = $getInstanceMethod.invoke(null,null))
+#set($containerContext = $containerManager.containerContext)
+   
+#set($userAccessor = $containerManager.containerContext.getComponent('userAccessor'))
+#set($groupManager = $containerManager.containerContext.getComponent("groupManager"))
+#set($group = $groupManager.getGroup($paramGroup))
+#set($users = $userAccessor.getMemberNamesAsList($group) )
+
+<div class="better-looking-user-list" style="min-width:200px;"> 
+<h3>
+	#if($paramTitle)$paramTitle#{else}$group#end
+</h3>
+
+#foreach( $username in $users )
+    #if (!$userAccessor.isDeactivated($username))
+        #set($user = $userAccessor.getUserByName($username))
+ 	<div style="float:none; clear:both; display: block;">
+	<a class="confluence-userlink rw_profile_picture" href="/display/~$username" data-username="$username" title="" >
+		<img class="userLogo logo" style="width: $paramAvatarSize; height: $paramAvatarSize; margin-right:4px; margin-bottom: 4px;" alt="User icon: $username" src="$userAccessor.getUserProfilePicture($user).getDownloadPath()" align="left"/> $user.fullName
+	</a>
+	</div>
+    #end
+ 
+#end
+</div>
+
+# vim: set syntax=html

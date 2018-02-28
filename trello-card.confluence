@@ -1,0 +1,14 @@
+## Trello Card
+##
+##   Embed Trello card into confluence page
+##
+## @param Card:title=Trello Card URL|type=string|required=true|desc=The URL of trello card. E.g. https://trello.com/c/...
+## @param Style:title=Card Style|type=enum|enumValues=trello-card,trello-card-compact|required=true
+ 
+<blockquote class="$paramStyle">
+  <a href="$paramCard">Trello Card...</a>
+</blockquote>
+<script src="https://p.trellocdn.com/embed.min.js"></script>
+
+
+# vim: set syntax=html
